@@ -27,9 +27,11 @@ edges = (
         (6,4),
         (6,7),
         (5,1),
-        (5,4),
+        # (5,4),
         (5,7)
     )
+
+assert(all([all([e2 < len(vertices) for e2 in e1]) for e1 in edges]))
 
 def Cube():
     glBegin(GL_LINES)
