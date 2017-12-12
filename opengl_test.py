@@ -59,17 +59,20 @@ surfaces = (
 
 def Cube():
     glBegin(GL_QUADS)
+    x = 1
     for surface in surfaces:
-        x = 0
+        # x = 0
         for vertex in surface:
-            x+=1
+            # x+=1
             glColor3fv(colors[x])
             glVertex3fv(vertices[vertex])
     glEnd()
 
     glBegin(GL_LINES)
+    x = 4
     for edge in edges:
         for vertex in edge:
+            glColor3fv(colors[x])
             glVertex3fv(vertices[vertex])
     glEnd()
 
