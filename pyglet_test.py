@@ -59,15 +59,19 @@ class Window(pyglet.window.Window):
         glLoadIdentity()
         glTranslatef(0, 0, -400)
 
-    def on_text_motion(self, motion):
-        if motion == key.UP:
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.UP:
             self.xRotation -= INCREMENT
-        elif motion == key.DOWN:
+        elif symbol == key.DOWN:
             self.xRotation += INCREMENT
-        elif motion == key.LEFT:
+        elif symbol == key.LEFT:
             self.yRotation -= INCREMENT
-        elif motion == key.RIGHT:
+        elif symbol == key.RIGHT:
             self.yRotation += INCREMENT
+
+        elif symbol == key.SPACE:
+            pyglet.image.get_buffer_manager().get_color_buffer().save(
+                    'screenshot.png')
 
 # window.push_handlers(pyglet.window.event.WindowEventLogger())
 
