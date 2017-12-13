@@ -10,31 +10,27 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet.gl import *
 from OpenGL.GLUT import *
-# import pyshaders as shaders
 
-from resources import vertices, surfaces, win_sz, colors, cube_sz, floor_sz
+from resources import vertices, surfaces, win_sz, colors, cube_sz, floor_sz,\
+    floor_verts
 
-INCREMENT = 12
+INCREMENT = 15
 
 class Window(pyglet.window.Window):
 
-    xRotation = yRotation = 30 # initial cube rotations
+    xRotation = yRotation = 0 # initial cube rotations
     xTrans = yTrans = 0 # initial cube translations
 
     def __init__(self, width, height, title=''):
         super(Window, self).__init__(width, height, title,
                 resizable=True)
-        # glClearColor(0, 0, 0, 1)
-        # Load shaders
-        # shader = shaders.from_files_names('main.glsl.vert', 'main.glsl.frag')
-        # shader.use()
-        # shader.enable_all_attributes()
-        # shader.owned = False
-        # self.shader = shader
-        # glEnable(GL_DEPTH_TEST)
+        # TODO see about shaders
 
     def Floor(self, color=colors['white'], size=floor_sz):
-        pass
+        for vert in floor_verts:
+            vert_coords = [a*floor_sz for a in vert]
+            glColor3ub(*color)
+            glVertex3f(*vert_coords)
 
     def Cube(self, colors, size=cube_sz, x=0, y=0, z=0):
         i = 0
@@ -53,18 +49,20 @@ class Window(pyglet.window.Window):
         self.clear()
         glPushMatrix() # push mx onto stack
 
+        glRotatef(self.xRotation, 1, 0, 0)
+        glRotatef(self.yRotation, 0, 1, 0)
+
         glTranslatef(self.xTrans, 0, 0)
         glTranslatef(0, self.yTrans, 0)
 
-        # BEGIN: Draw the cubes
         glBegin(GL_QUADS)
 
-        self.Cube(colors=[colors['green']])
+        self.Floor()
         self.Cube(colors=[colors['red']], x=2.5*cube_sz, y=2.5*cube_sz)
         self.Cube(colors=[colors['red']], x=-2.5*cube_sz, y=2.5*cube_sz)
+        self.Cube(colors=[colors['green']])
 
-        glEnd()
-        # END: Draw cube
+        glEnd() # GL_QUADS
 
         glPopMatrix()
 
@@ -78,7 +76,7 @@ class Window(pyglet.window.Window):
 
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-        glTranslatef(0, 0, -400)
+        glTranslatef(0, 0, -800)
 
     def on_text_motion(self, motion):
 
@@ -99,10 +97,22 @@ class Window(pyglet.window.Window):
         elif symbol == key.ESCAPE:
             exit(0)
 
+        elif symbol == key.J:
+            self.xRotation += INCREMENT
+        elif symbol == key.K:
+            self.xRotation -= INCREMENT
+        elif symbol == key.H:
+            self.yRotation += INCREMENT
+        elif symbol == key.L:
+            self.yRotation -= INCREMENT
+
+
+
+
 def main():
     # pyglet.clock.schedule_interval(update, 0.5)
     window = Window(*win_sz, 'Drone AI Gym')
-    # window.push_handlers(pyglet.window.event.WindowEventLogger())
+    window.push_handlers(pyglet.window.event.WindowEventLogger())
     pyglet.app.run()
 
 if __name__ == '__main__':
