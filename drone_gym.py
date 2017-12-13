@@ -11,14 +11,15 @@ from pyglet.window import mouse
 from pyglet.gl import *
 from OpenGL.GLUT import *
 
-from resources import vertices, surfaces, win_sz, colors, cube_sz, floor_sz,\
-    floor_verts
+from resources import vertices, surfaces, colors, floor_verts,\
+        win_sz, cube_sz, floor_sz
 
 INCREMENT = 15
 
 class Window(pyglet.window.Window):
 
-    xRotation = yRotation = 0 # initial cube rotations
+    xRotation = -60
+    zRotation = -15 # initial cube rotations
     xTrans = yTrans = 0 # initial cube translations
 
     def __init__(self, width, height, title=''):
@@ -50,7 +51,7 @@ class Window(pyglet.window.Window):
         glPushMatrix() # push mx onto stack
 
         glRotatef(self.xRotation, 1, 0, 0)
-        glRotatef(self.yRotation, 0, 1, 0)
+        glRotatef(self.zRotation, 0, 0, 1)
 
         glTranslatef(self.xTrans, 0, 0)
         glTranslatef(0, self.yTrans, 0)
@@ -102,12 +103,9 @@ class Window(pyglet.window.Window):
         elif symbol == key.K:
             self.xRotation -= INCREMENT
         elif symbol == key.H:
-            self.yRotation += INCREMENT
+            self.zRotation += INCREMENT
         elif symbol == key.L:
-            self.yRotation -= INCREMENT
-
-
-
+            self.zRotation -= INCREMENT
 
 def main():
     # pyglet.clock.schedule_interval(update, 0.5)
