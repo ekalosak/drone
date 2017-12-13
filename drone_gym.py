@@ -10,6 +10,7 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet.gl import *
 from OpenGL.GLUT import *
+# import pyshaders as shaders
 
 from resources import vertices, surfaces, win_sz, colors, cube_sz
 
@@ -18,33 +19,49 @@ INCREMENT = 12
 class Window(pyglet.window.Window):
 
     xRotation = yRotation = 30 # initial cube rotations
+    xTrans = yTrans = 0 # initial cube translations
 
     def __init__(self, width, height, title=''):
-        super(Window, self).__init__(width, height, title)
-        glClearColor(0, 0, 0, 1)
-        glEnable(GL_DEPTH_TEST)
+        super(Window, self).__init__(width, height, title,
+                resizable=True)
+        # glClearColor(0, 0, 0, 1)
+        # Load shaders
+        # shader = shaders.from_files_names('main.glsl.vert', 'main.glsl.frag')
+        # shader.use()
+        # shader.enable_all_attributes()
+        # shader.owned = False
+        # self.shader = shader
+        # glEnable(GL_DEPTH_TEST)
 
     def on_draw(self):
         self.clear()
         glPushMatrix() # push mx onto stack
 
-        glRotatef(self.xRotation, 1, 0, 0)
-        glRotatef(self.yRotation, 0, 1, 0)
+        # glRotatef(self.xRotation, 1, 0, 0)
+        # glRotatef(self.yRotation, 0, 1, 0)
+
+        glTranslatef(self.xTrans, 1, 0)
+        glTranslatef(0, self.yTrans, 0)
 
         # BEGIN: Draw the cubes
         glBegin(GL_QUADS)
 
-        color = colors['green']
+        cs = [colors['red'], colors['blue']]
+        i = 0
         for surface in surfaces:
             for vert_ix in surface:
                 vert_coords = [a*cube_sz for a in vertices[vert_ix]]
+                color = cs[i]
+                i = (i + 1) %len(cs)
                 glColor3ub(*color)
                 glVertex3f(*vert_coords)
 
-        color = colors['red']
+        cs = [colors['green'], colors['blue']]
         for surface in surfaces:
             for vert_ix in surface:
-                vert_coords = [a*cube_sz - 25 for a in vertices[vert_ix]]
+                vert_coords = [a*cube_sz - 75 for a in vertices[vert_ix]]
+                color = cs[i]
+                i = (i + 1) %len(cs)
                 glColor3ub(*color)
                 glVertex3f(*vert_coords)
 
@@ -66,14 +83,20 @@ class Window(pyglet.window.Window):
         glTranslatef(0, 0, -400)
 
     def on_text_motion(self, motion):
+
         if motion == key.UP:
             self.xRotation -= INCREMENT
+            self.yTrans -= INCREMENT
         elif motion == key.DOWN:
             self.xRotation += INCREMENT
+            self.yTrans += INCREMENT
+
         elif motion == key.LEFT:
             self.yRotation -= INCREMENT
+            self.xTrans -= INCREMENT
         elif motion == key.RIGHT:
             self.yRotation += INCREMENT
+            self.xTrans += INCREMENT
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.SPACE:
