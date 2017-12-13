@@ -9,11 +9,11 @@ In silico drone learning environment
 
 ## Progress
 Working 3D render of a cube. Next milestones are:
-1. Render multiple cubes
-2. Implement flight controls for camera
-3. Render from multiple viewpoints (e.g. both drone's and bird-eye)
-4. Implement physics
+1. Implement flight controls for camera
+2. Render from multiple viewpoints (e.g. both drone's and bird-eye)
+3. Implement physics
+4. Make reinforcement pipeline to teach drone to hover at height = 1
 
 ## Getting started
 1. Clone the repo `git clone https://github.com/ekalosak/drone.git`
-2. Run `python pyglet_test.py`
+2. Run `python drone_gym.py`

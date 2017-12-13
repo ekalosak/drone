@@ -13,11 +13,11 @@ from OpenGL.GLUT import *
 
 from resources import vertices, surfaces, win_sz, colors, cube_sz
 
-INCREMENT = 5
+INCREMENT = 12
 
 class Window(pyglet.window.Window):
-    # Cube 3D start rotation
-    xRotation = yRotation = 30
+
+    xRotation = yRotation = 30 # initial cube rotations
 
     def __init__(self, width, height, title=''):
         super(Window, self).__init__(width, height, title)
@@ -31,7 +31,7 @@ class Window(pyglet.window.Window):
         glRotatef(self.xRotation, 1, 0, 0)
         glRotatef(self.yRotation, 0, 1, 0)
 
-        # BEGIN: Draw the cube
+        # BEGIN: Draw the cubes
         glBegin(GL_QUADS)
 
         color = colors['green']
@@ -82,8 +82,11 @@ class Window(pyglet.window.Window):
         elif symbol == key.ESCAPE:
             exit(0)
 
-if __name__ == '__main__':
+def main():
     # pyglet.clock.schedule_interval(update, 0.5)
-    window = Window(*win_sz, '')
+    window = Window(*win_sz, 'Drone AI Gym')
     # window.push_handlers(pyglet.window.event.WindowEventLogger())
     pyglet.app.run()
+
+if __name__ == '__main__':
+    main()
