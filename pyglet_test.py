@@ -59,23 +59,25 @@ class Window(pyglet.window.Window):
         glLoadIdentity()
         glTranslatef(0, 0, -400)
 
-    def on_key_press(self, symbol, modifiers):
-        if symbol == key.UP:
+    def on_text_motion(self, motion):
+        if motion == key.UP:
             self.xRotation -= INCREMENT
-        elif symbol == key.DOWN:
+        elif motion == key.DOWN:
             self.xRotation += INCREMENT
-        elif symbol == key.LEFT:
+        elif motion == key.LEFT:
             self.yRotation -= INCREMENT
-        elif symbol == key.RIGHT:
+        elif motion == key.RIGHT:
             self.yRotation += INCREMENT
 
-        elif symbol == key.SPACE:
+    def on_key_press(self, symbol, modifiers):
+        if symbol == key.SPACE:
             pyglet.image.get_buffer_manager().get_color_buffer().save(
                     'screenshot.png')
-
-# window.push_handlers(pyglet.window.event.WindowEventLogger())
+        elif symbol == key.ESCAPE:
+            exit(0)
 
 if __name__ == '__main__':
     # pyglet.clock.schedule_interval(update, 0.5)
-    Window(*win_sz, 'Pyglet Colored Cube')
+    window = Window(*win_sz, '')
+    # window.push_handlers(pyglet.window.event.WindowEventLogger())
     pyglet.app.run()
