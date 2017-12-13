@@ -22,7 +22,7 @@ WALKING_SPEED = 5
 FLYING_SPEED = 15
 
 GRAVITY = 5.0
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 20.0 # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -164,7 +164,7 @@ class Model(object):
         n = 12  # 1/2 width and height of world
         s = 1  # step size
         y = 0  # initial y height
-        h = 3 # 1/2 height of ceiling
+        h = n # 1/2 height of ceiling
         for x in xrange(-n, n + 1, s):
             for z in xrange(-n, n + 1, s):
                 # create a layer stone an grass everywhere.
@@ -432,7 +432,7 @@ class Window(pyglet.window.Window):
         # First element is -1 when moving forward, 1 when moving back, and 0
         # otherwise. The second element is -1 when moving left, 1 when moving
         # right, and 0 otherwise.
-        self.strafe = [0, 0, 0]
+        self.strafe = [0, 0, 0, 0] # last 2 elms are up/dn & cw/ccw
 
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
@@ -692,8 +692,8 @@ class Window(pyglet.window.Window):
             The movement of the mouse.
 
         """
-        if self.exclusive:
-            m = 0.15
+        if self.exclusive and (not self.flying):
+            m = 0.1
             x, y = self.rotation
             x, y = x + dx * m, y + dy * m
             y = max(-90, min(90, y))
@@ -711,6 +711,7 @@ class Window(pyglet.window.Window):
             Number representing any modifying keys that were pressed.
 
         """
+        m = 5
         if symbol == key.W:
             self.strafe[0] -= 1
         elif symbol == key.S:
@@ -723,6 +724,26 @@ class Window(pyglet.window.Window):
             self.strafe[2] -= 1
         elif symbol == key.K:
             self.strafe[2] += 1
+        elif symbol == key.H:
+            x, y = self.rotation
+            x = x + m
+            y = max(-90, min(90, y))
+            self.rotation = (x, y)
+        elif symbol == key.L:
+            x, y = self.rotation
+            x = x - m
+            y = max(-90, min(90, y))
+            self.rotation = (x, y)
+        elif symbol == key.U:
+            x, y = self.rotation
+            y = y + m
+            y = max(-90, min(90, y))
+            self.rotation = (x, y)
+        elif symbol == key.N:
+            x, y = self.rotation
+            y = y - m
+            y = max(-90, min(90, y))
+            self.rotation = (x, y)
 
         elif symbol == key.SPACE:
             if self.dy == 0:
@@ -765,6 +786,10 @@ class Window(pyglet.window.Window):
             self.strafe[2] += 1
         elif symbol == key.K:
             self.strafe[2] -= 1
+        elif symbol == key.H:
+            self.strafe[3] += 1
+        elif symbol == key.L:
+            self.strafe[3] -= 1
 
     def on_resize(self, width, height):
         """ Called when the window is resized to a new `width` and `height`.
