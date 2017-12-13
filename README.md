@@ -10,6 +10,7 @@ In silico drone learning environment
 ## Progress
 Working 3D render of a floor with cubes on it.
 Next milestones are:
+0. Make rotations center around camera
 1. Render from multiple viewpoints (e.g. both drone's and bird-eye)
 2. Implement physics
 3. Make reinforcement pipeline to teach drone to hover at height = 1
