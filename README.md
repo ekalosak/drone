@@ -8,8 +8,11 @@ In silico drone learning environment
 4. Repeat
 
 ## Progress
-Early stages. Still working on building a reactive 3D environment (i.e. step 1
-above)
+Working 3D render of a cube. Next milestones are:
+1. Render multiple cubes
+2. Implement flight controls for camera
+3. Render from multiple viewpoints (e.g. both drone's and bird-eye)
+4. Implement physics
 
 ## Getting started
 1. Clone the repo `git clone https://github.com/ekalosak/drone.git`
