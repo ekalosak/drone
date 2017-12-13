@@ -2,6 +2,7 @@
 # https://pyglet.readthedocs.io/en/latest/programming_guide/gl.html#guide-gl
 # http://www.natan.termitnjak.net/tutorials/pyglet_basic.html
 # https://www.packtpub.com/books/content/creating-amazing-3d-guis-pyglet
+# https://github.com/fogleman/Minecraft/blob/master/main.py
 
 import pdb
 import pyglet
@@ -18,8 +19,8 @@ INCREMENT = 15
 
 class Window(pyglet.window.Window):
 
-    xRotation = -60
-    zRotation = -15 # initial cube rotations
+    xRotation = -75
+    zRotation = 0 # initial cube rotations
     xTrans = yTrans = 0 # initial cube translations
 
     def __init__(self, width, height, title=''):
@@ -107,10 +108,59 @@ class Window(pyglet.window.Window):
         elif symbol == key.L:
             self.zRotation -= INCREMENT
 
+
+class Model(object):
+    def __init__(self):
+        # A Batch is a collection of vertex lists for batched rendering.
+        self.batch = pyglet.graphics.Batch()
+
+        # # A TextureGroup manages an OpenGL texture.
+        # self.group = TextureGroup(image.load(TEXTURE_PATH).get_texture())
+
+        # A mapping from position to the texture of the block at that position.
+        # This defines all the blocks that are currently in the world.
+        self.world = {}
+
+        # Same mapping as `world` but only contains blocks that are shown.
+        self.shown = {}
+
+        # Mapping from position to a pyglet `VertextList` for all shown blocks.
+        self._shown = {}
+
+        # Mapping from sector to a list of positions inside that sector.
+        self.sectors = {}
+
+        # Simple function queue implementation. The queue is populated with
+        # _show_block() and _hide_block() calls
+        self.queue = deque()
+
+        self._initialize()
+
+
+def setup():
+    """ Basic OpenGL configuration.
+    https://github.com/fogleman/Minecraft/blob/master/main.py
+    with modifications
+    """
+    # Set the color of "clear", i.e. the sky, in rgba.
+    glClearColor(0.5, 0.69, 1.0, 1)
+    # Enable culling (not rendering) of back-facing facets -- facets that aren't
+    # visible to you.
+    glEnable(GL_CULL_FACE)
+    # Set the texture minification/magnification function to GL_NEAREST (nearest
+    # in Manhattan distance) to the specified texture coordinates. GL_NEAREST
+    # "is generally faster than GL_LINEAR, but it can produce textured images
+    # with sharper edges because the transition between texture elements is not
+    # as smooth."
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+    # setup_fog()
+
 def main():
     # pyglet.clock.schedule_interval(update, 0.5)
     window = Window(*win_sz, 'Drone AI Gym')
     window.push_handlers(pyglet.window.event.WindowEventLogger())
+    setup()
     pyglet.app.run()
 
 if __name__ == '__main__':
