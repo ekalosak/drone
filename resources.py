@@ -1,5 +1,3 @@
-# from opengl_test import vertices, edges, colors, surfaces
-
 vertices= (
         (1, -1, -1),
         (1, 1, -1),
@@ -22,26 +20,17 @@ edges = (
         (6,4),
         (6,7),
         (5,1),
-        # (5,4),
+        (5,4),
         (5,7)
     )
 
 assert(all([all([e2 < len(vertices) for e2 in e1]) for e1 in edges]))
 
-colors = (
-        (1,0,0),
-        (0,1,0),
-        (0,0,1),
-        (0,1,0),
-        (1,1,1),
-        (0,1,1),
-        (1,0,0),
-        (0,1,0),
-        (0,0,1),
-        (1,0,0),
-        (1,1,1),
-        (0,1,1),
-    )
+colors = {
+        'red' : (255, 0, 0),
+        'green' : (0, 255, 0),
+        'blue' : (0, 0, 255)
+        }
 
 surfaces = (
         (0,1,2,3),
@@ -53,4 +42,4 @@ surfaces = (
     )
 
 win_sz = (800, 600)
-
+cube_sz = 50
