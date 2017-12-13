@@ -432,7 +432,7 @@ class Window(pyglet.window.Window):
         # First element is -1 when moving forward, 1 when moving back, and 0
         # otherwise. The second element is -1 when moving left, 1 when moving
         # right, and 0 otherwise.
-        self.strafe = [0, 0]
+        self.strafe = [0, 0, 0]
 
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
@@ -515,23 +515,31 @@ class Window(pyglet.window.Window):
         """
         if any(self.strafe):
             x, y = self.rotation
-            strafe = math.degrees(math.atan2(*self.strafe))
+            strafe = math.degrees(math.atan2(*self.strafe[0:2]))
             y_angle = math.radians(y)
             x_angle = math.radians(x + strafe)
+
             if self.flying:
-                m = math.cos(y_angle)
-                dy = math.sin(y_angle)
-                if self.strafe[1]:
-                    # Moving left or right.
-                    dy = 0.0
-                    m = 1
-                if self.strafe[0] > 0:
-                    # Moving backwards.
-                    dy *= -1
-                # When you are flying up or down, you have less left and right
-                # motion.
-                dx = math.cos(x_angle) * m
-                dz = math.sin(x_angle) * m
+                dz = self.strafe[0]
+                dx = self.strafe[1]
+                dy = self.strafe[2]
+                # m = math.cos(y_angle)
+                # dy = math.sin(y_angle)
+                # if self.strafe[1]:
+                #     # Moving left or right.
+                #     dy = 0.0
+                #     m = 1
+                # if self.strafe[0]:
+                #     # Moving front or back
+                #     dy *= -1
+                # if self.strafe[2]:
+                #     # Moving up or down
+                #     m = 0
+                # # When you are flying up or down, you have less left and right
+                # # motion.
+                # dx = math.cos(x_angle) * m
+                # dz = math.sin(x_angle) * m
+
             else:
                 dy = 0.0
                 dx = math.cos(x_angle)
@@ -588,6 +596,7 @@ class Window(pyglet.window.Window):
             self.dy -= dt * GRAVITY
             self.dy = max(self.dy, -TERMINAL_VELOCITY)
             dy += self.dy * dt
+
         # collisions
         x, y, z = self.position
         x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT)
@@ -710,9 +719,20 @@ class Window(pyglet.window.Window):
             self.strafe[1] -= 1
         elif symbol == key.D:
             self.strafe[1] += 1
+        elif symbol == key.J: # elevation up, down
+            self.strafe[2] -= 1
+        elif symbol == key.K:
+            self.strafe[2] += 1
+
         elif symbol == key.SPACE:
             if self.dy == 0:
                 self.dy = JUMP_SPEED
+
+        elif symbol == key.H: # twist cw/ccw
+            pass
+        elif symbol == key.L:
+            pass
+
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
@@ -741,6 +761,10 @@ class Window(pyglet.window.Window):
             self.strafe[1] += 1
         elif symbol == key.D:
             self.strafe[1] -= 1
+        elif symbol == key.J:
+            self.strafe[2] += 1
+        elif symbol == key.K:
+            self.strafe[2] -= 1
 
     def on_resize(self, width, height):
         """ Called when the window is resized to a new `width` and `height`.
