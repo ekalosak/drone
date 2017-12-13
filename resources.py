@@ -29,7 +29,8 @@ assert(all([all([e2 < len(vertices) for e2 in e1]) for e1 in edges]))
 colors = {
         'red' : (255, 0, 0),
         'green' : (0, 255, 0),
-        'blue' : (0, 0, 255)
+        'blue' : (0, 0, 255),
+        'white' : (255, 255, 255)
         }
 
 surfaces = (
@@ -42,4 +43,5 @@ surfaces = (
     )
 
 win_sz = (800, 600)
-cube_sz = 50
+cube_sz = 20
+floor_sz =  10*cube_sz

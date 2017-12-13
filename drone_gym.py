@@ -12,7 +12,7 @@ from pyglet.gl import *
 from OpenGL.GLUT import *
 # import pyshaders as shaders
 
-from resources import vertices, surfaces, win_sz, colors, cube_sz
+from resources import vertices, surfaces, win_sz, colors, cube_sz, floor_sz
 
 INCREMENT = 12
 
@@ -33,37 +33,35 @@ class Window(pyglet.window.Window):
         # self.shader = shader
         # glEnable(GL_DEPTH_TEST)
 
+    def Floor(self, color=colors['white'], size=floor_sz):
+        pass
+
+    def Cube(self, colors, size=cube_sz, x=0, y=0, z=0):
+        i = 0
+        for surface in surfaces:
+            for vert_ix in surface:
+                vert_coords = [a*cube_sz for a in vertices[vert_ix]]
+                vert_coords[0] += x
+                vert_coords[1] += y
+                vert_coords[2] += z
+                color = colors[i]
+                i = (i + 1) %len(colors)
+                glColor3ub(*color)
+                glVertex3f(*vert_coords)
+
     def on_draw(self):
         self.clear()
         glPushMatrix() # push mx onto stack
 
-        # glRotatef(self.xRotation, 1, 0, 0)
-        # glRotatef(self.yRotation, 0, 1, 0)
-
-        glTranslatef(self.xTrans, 1, 0)
+        glTranslatef(self.xTrans, 0, 0)
         glTranslatef(0, self.yTrans, 0)
 
         # BEGIN: Draw the cubes
         glBegin(GL_QUADS)
 
-        cs = [colors['red'], colors['blue']]
-        i = 0
-        for surface in surfaces:
-            for vert_ix in surface:
-                vert_coords = [a*cube_sz for a in vertices[vert_ix]]
-                color = cs[i]
-                i = (i + 1) %len(cs)
-                glColor3ub(*color)
-                glVertex3f(*vert_coords)
-
-        cs = [colors['green'], colors['blue']]
-        for surface in surfaces:
-            for vert_ix in surface:
-                vert_coords = [a*cube_sz - 75 for a in vertices[vert_ix]]
-                color = cs[i]
-                i = (i + 1) %len(cs)
-                glColor3ub(*color)
-                glVertex3f(*vert_coords)
+        self.Cube(colors=[colors['green']])
+        self.Cube(colors=[colors['red']], x=2.5*cube_sz, y=2.5*cube_sz)
+        self.Cube(colors=[colors['red']], x=-2.5*cube_sz, y=2.5*cube_sz)
 
         glEnd()
         # END: Draw cube
@@ -85,17 +83,13 @@ class Window(pyglet.window.Window):
     def on_text_motion(self, motion):
 
         if motion == key.UP:
-            self.xRotation -= INCREMENT
-            self.yTrans -= INCREMENT
-        elif motion == key.DOWN:
-            self.xRotation += INCREMENT
             self.yTrans += INCREMENT
+        elif motion == key.DOWN:
+            self.yTrans -= INCREMENT
 
         elif motion == key.LEFT:
-            self.yRotation -= INCREMENT
             self.xTrans -= INCREMENT
         elif motion == key.RIGHT:
-            self.yRotation += INCREMENT
             self.xTrans += INCREMENT
 
     def on_key_press(self, symbol, modifiers):
