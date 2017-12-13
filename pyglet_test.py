@@ -41,6 +41,13 @@ class Window(pyglet.window.Window):
                 glColor3ub(*color)
                 glVertex3f(*vert_coords)
 
+        color = colors['red']
+        for surface in surfaces:
+            for vert_ix in surface:
+                vert_coords = [a*cube_sz - 25 for a in vertices[vert_ix]]
+                glColor3ub(*color)
+                glVertex3f(*vert_coords)
+
         glEnd()
         # END: Draw cube
 
